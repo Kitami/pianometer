@@ -143,7 +143,7 @@ function toggleDisplayNoteNames(cb) {
 
 function changeColor() {
     keyOnColor = pedaledColor = color(select('#colorpicker').value());
-    darkenedColor = keyOnColor.levels.map(x => floor(x * .7));
+    darkenedColor = keyOnColor.levels.map(x => floor(x * .5));
     pedaledColor = color(`rgb(${darkenedColor[0]}, ${darkenedColor[1]}, ${darkenedColor[2]})`)
     console.log(pedaledColor.levels);
 }
