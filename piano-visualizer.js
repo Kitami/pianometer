@@ -51,8 +51,7 @@ function drawWhiteKeys() {
         fill(keyOnColor); // keypressed
       } else if (isKeyOn[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 100, 100); // rainbowMode
-      } 
-      // else if (isPedaled[i] == 1 && !rainbowMode) {
+      // } else if (isPedaled[i] == 1 && !rainbowMode) {
         // fill(pedaledColor); // pedaled
       } else if (isPedaled[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 70, 100); // pedaled rainbowMode
@@ -83,8 +82,7 @@ function drawBlackKeys() {
         fill(keyOnColor); // keypressed
       } else if (isKeyOn[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 100, 100); // rainbowMode
-      }
-      // else if (isPedaled[i] == 1 && !rainbowMode) {
+      // } else if (isPedaled[i] == 1 && !rainbowMode) {
        // fill(pedaledColor); // pedaled
       } else if (isPedaled[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 70, 100); // pedaled rainbowMode
