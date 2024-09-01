@@ -2,7 +2,7 @@ function setup() {
   createCanvas(1098, 118).parent('piano-visualizer');
   colorMode(HSB, 360, 100, 100, 100);
   keyOnColor = color(326, 100, 100, 100); // <---- 編輯這裡換「按下時」的顏色！[HSB Color Mode] 
-  pedaledColor = color(326, 100, 70, 30); // <---- 編輯這裡換「踏板踩住」的顏色！[HSB Color Mode]
+  // pedaledColor = color(326, 100, 70, 50); // <---- 編輯這裡換「踏板踩住」的顏色！[HSB Color Mode]
   smooth(2);
   frameRate(60);
   initKeys();
@@ -51,8 +51,9 @@ function drawWhiteKeys() {
         fill(keyOnColor); // keypressed
       } else if (isKeyOn[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 100, 100); // rainbowMode
-      } else if (isPedaled[i] == 1 && !rainbowMode) {
-        fill(pedaledColor); // pedaled
+      } 
+      // else if (isPedaled[i] == 1 && !rainbowMode) {
+        // fill(pedaledColor); // pedaled
       } else if (isPedaled[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 70, 100); // pedaled rainbowMode
       } else {
@@ -82,8 +83,9 @@ function drawBlackKeys() {
         fill(keyOnColor); // keypressed
       } else if (isKeyOn[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 100, 100); // rainbowMode
-      } else if (isPedaled[i] == 1 && !rainbowMode) {
-        fill(pedaledColor); // pedaled
+      }
+      // else if (isPedaled[i] == 1 && !rainbowMode) {
+       // fill(pedaledColor); // pedaled
       } else if (isPedaled[i] == 1 && rainbowMode) {
         fill(map(i, 21, 108, 0, 1080) % 360, 100, 70, 100); // pedaled rainbowMode
       } else {
