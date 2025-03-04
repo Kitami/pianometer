@@ -2,19 +2,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>好和弦的鋼琴鍵盤顯示器</title>
+    <title>響鋼琴鍵盤顯示器</title>
     <link rel="stylesheet" href="style.css">
     <script src="p5.min.js"></script>
     <script src="tonal.min.js"></script>
-
     <script src="webmidi.js"></script>
     <script src="globals.js"></script>
     <script src="piano-visualizer.js"></script>
+    <script src="https://unpkg.com/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
+    <style>
+        #music-container {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div id="main">
-           <div id="controls" class="center">
+        <div id="controls" class="center">
             <div>
                 <div style="display: flex; justify-content: space-around;">
                     <div>
@@ -34,23 +39,22 @@
                                 <span class="switch-txt" turnOn="On" turnOff="Off"></span>
                             </label>
                         </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="margin-right: 5px;">顯示樂譜</span>
+                            <button id="displaySheet" onclick="toggleDisplaySheet(this)">
+                        </div>
                     </div>
                 </div>
             </div>
-            <br />
-            
+            <div id="music-container">
+                <p id="instructions">Drop your MusicXML file here</p>
             </div>
         </div>
-
-        <div class="centerbottom">
-            <div id="piano-visualizer">
-                <!-- Our sketch will go here! -->
-            </div>
-            <span style="font-size: 11px;"> 
-            TIME：使用時間 | NOTE COUNT：總彈奏音符數 | NPS：最近一秒鐘彈奏音符數（括號為歷史最大值） | LEGATO：圓滑指數（最近一秒鐘平均來說有幾個鍵被同時按住） <br />
-            CALORIES：消耗熱量（估計值，好玩就好）| PEDALS：左右踏板深度顯示 <br />
-        </span>
+    </div>
+    <div class="centerbottom">
+        <div id="piano-visualizer">
+            <!-- Our sketch will go here! -->
+        </div>
     </div>  
-    
 </body>
 </html>
