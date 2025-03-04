@@ -18,20 +18,24 @@ function draw() {
 }
 
 function calculateSessionTime() {
+  if (!sessionStartTime) {
+    return "00:00:00"; // 如果还未开始计时，则返回默认时间
+  }
+  
   let currentTime = new Date();
   let timeElapsed = currentTime - sessionStartTime;
-  // Convert time elapsed to hours, minutes, and seconds
+
   let seconds = Math.floor((timeElapsed / 1000) % 60);
   let minutes = Math.floor((timeElapsed / (1000 * 60)) % 60);
   let hours = Math.floor((timeElapsed / (1000 * 60 * 60)) % 24);
   sessionTotalSeconds = Math.floor(timeElapsed / 1000);
-  // Pad minutes and seconds with leading zeros
+
   let paddedMinutes = String(minutes).padStart(2, '0');
   let paddedSeconds = String(seconds).padStart(2, '0');
   let timeText = `${hours}:${paddedMinutes}:${paddedSeconds}`;
+  
   return timeText;
 }
-
 function initKeys() {
   for (i = 0; i < 128; i++) {
     isKeyOn[i] = 0;
@@ -126,8 +130,8 @@ function drawTexts() {
   let notesText = "NOTE COUNT" + "\n" + totalNotesPlayed;
   text(notesText, 85, 79);
 
-  // CALORIES
-  let caloriesText = "CALORIES" + "\n" + (totalIntensityScore / 250).toFixed(3); // 250 Intensity = 1 kcal.
+  // CHORD
+  let caloriesText = "NOTE NAME" + "\n" + "CHORD";
   text(caloriesText, 350, 79);
 
   // SHORT-TERM DENSITY
@@ -152,13 +156,16 @@ function drawTexts() {
 }
 
 function pushHistories() {
+  // 检查是否接收到音符信号，并且 sessionStartTime 还未被设置
+  if (notesThisFrame > 0 && !sessionStartTime) {
+    sessionStartTime = new Date(); // 设置开始时间
+    totalNotesPlayed = 0;
+  }
   shortTermTotal.push(notesThisFrame);
   shortTermTotal.shift();
   notesThisFrame = 0;
   legatoHistory.push(isKeyOn.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
   legatoHistory.shift();
-
-
 }
 
 function convertNumberToBars(number) {
@@ -243,7 +250,8 @@ function mouseClicked() {
   }
   if (mouseY > 76) {
     if (mouseX <= 84) {
-      sessionStartTime = new Date();
+      sessionStartTime = null;
+      totalNotesPlayed = 0;
     }
 
     if (mouseX > 84 && mouseX < 170) {
@@ -264,3 +272,105 @@ function mouseClicked() {
   }
   console.log(mouseX, mouseY);
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.getElementById("music-container");
+  const instructions = document.getElementById("instructions");
+
+  // Initialize OSMD with specific settings
+  const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("music-container", {
+    drawingParameters: "compact", // Adjust if necessary
+    drawPartNames: false,
+    drawTitles: true,
+    drawClefs: true,
+    drawKeySignatures: true,
+    drawTimeSignatures: true,
+    drawMeasures: true,
+    drawRepeatMarks: true
+  });
+
+
+  // Load the MusicXML and render it
+  function loadMusicXML(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const musicXML = event.target.result;
+        osmd.load(musicXML).then(() => {
+            osmd.render();
+            adjustSVG();
+            instructions.style.display = 'none';
+        });
+        instructions.style.display = 'none';
+    };
+    reader.readAsText(file);
+  }
+
+  // Drag and drop events
+  container.addEventListener("dragover", function(event) {
+      event.preventDefault();
+      container.classList.add("dragging");
+  });
+
+  container.addEventListener("dragleave", function() {
+      container.classList.remove("dragging");
+  });
+
+  container.addEventListener("drop", function(event) {
+      event.preventDefault();
+      container.classList.remove("dragging");
+      const file = event.dataTransfer.files[0];
+      if (file && file.name.endsWith(".xml")) {
+          loadMusicXML(file);
+      } else {
+          alert("Please drop a valid MusicXML file.");
+      }
+  });
+
+  // Prevent default drag and drop behavior for the whole window to stop opening the file in a new tab
+  window.addEventListener("dragover", function(event) {
+      event.preventDefault();
+  });
+
+  window.addEventListener("drop", function(event) {
+      event.preventDefault();
+  });
+});
+
+function adjustSVG() {
+  const svgElement = document.querySelector('#osmdCanvasPage1 svg');
+  const canvasElement = document.querySelector('#osmdCanvasPage1');
+  if (svgElement) {
+      // Remove the width attribute
+      svgElement.removeAttribute('width');
+      canvasElement.removeAttribute('width');
+
+      // Adjust the SVG width to fit the container
+      svgElement.style.width = '100%';
+      canvasElement.style.width = '100%';
+
+      // Adjust the container scroll position
+      const container = document.getElementById('music-container');
+      container.scrollTop = 0;
+      container.scrollLeft = 0;
+  }
+}
+
+document.addEventListener('keydown', function(event) {
+  const container = document.getElementById('music-container');
+  const clientHeight = container.clientHeight;
+
+  if (event.key === 'PageDown') {
+      container.scrollTo({
+          top: container.scrollTop + clientHeight,
+          behavior: 'smooth' // 实现平滑滚动
+      });
+      event.preventDefault(); // 防止默认行为
+  } else if (event.key === 'PageUp') {
+      container.scrollTo({
+          top: container.scrollTop - clientHeight,
+          behavior: 'smooth' // 实现平滑滚动
+      });
+      event.preventDefault(); // 防止默认行为
+  }
+});
+
