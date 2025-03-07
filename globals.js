@@ -38,31 +38,31 @@ let totalIntensityScore = 0;
 let notePressedCount = 0;
 let notePressedCountHistory = [];
 
-WebMidi.enable(function (err) { //check if WebMidi.js is enabled
+WebMidi.enable(function (err) {
     if (err) {
         console.log("WebMidi could not be enabled.", err);
     } else {
         console.log("WebMidi enabled!");
-    }
 
-    //name our visible MIDI input and output ports
-    console.log("---");
-    console.log("Inputs Ports: ");
-    for (i = 0; i < WebMidi.inputs.length; i++) {
-        console.log(i + ": " + WebMidi.inputs[i].name);
+        let midiSelect = document.querySelector("#midi-select");
+        midiSelect.innerHTML = "";
+        WebMidi.inputs.forEach((input, index) => {
+            let option = document.createElement("option");
+            option.value = index;
+            option.text = input.name;
+            midiSelect.appendChild(option);
+        });
+        if (WebMidi.inputs.length > 0) {
+            midiIn = WebMidi.inputs[0];
+            inputChanged();
+        }
+        midiSelect.onchange = function () {
+            midiIn = WebMidi.inputs[this.value];
+            inputChanged();
+        };
     }
-
-    console.log("---");
-    console.log("Output Ports: ");
-    for (i = 0; i < WebMidi.outputs.length; i++) {
-        console.log(i + ": " + WebMidi.outputs[i].name);
-    }
-    midiSelectSlider = select("#slider");
-    midiSelectSlider.attribute("max", WebMidi.inputs.length - 1);
-    midiSelectSlider.input(inputChanged);
-    midiIn = WebMidi.inputs[midiSelectSlider.value()]
-    inputChanged();
 });
+
 
 function inputChanged() {
     isKeyOn.fill(0);
