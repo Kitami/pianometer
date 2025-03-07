@@ -74,7 +74,7 @@ function inputChanged() {
     controllerChange(67, 0);
 
     midiIn.removeListener();
-    midiIn = WebMidi.inputs[midiSelectSlider.value()];
+    midiIn = WebMidi.inputs[midiSelect.value()];  // 改為使用下拉框選擇的值
     midiIn.addListener('noteon', "all", function (e) {
         console.log("Received 'noteon' message (" + e.note.number + ", " + e.velocity + ").");
         noteOn(e.note.number, e.velocity);
@@ -82,11 +82,11 @@ function inputChanged() {
     midiIn.addListener('noteoff', "all", function (e) {
         console.log("Received 'noteoff' message (" + e.note.number + ", " + e.velocity + ").");
         noteOff(e.note.number, e.velocity);
-    })
+    });
     midiIn.addListener('controlchange', 'all', function(e) {
         console.log("Received control change message:", e.controller.number, e.value);
-        controllerChange(e.controller.number, e.value)
-      });
+        controllerChange(e.controller.number, e.value);
+    });
     console.log(midiIn.name);
     select("#device").html(midiIn.name);
 };
