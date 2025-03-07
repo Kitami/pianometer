@@ -58,8 +58,11 @@ WebMidi.enable(function (err) {
             inputChanged();
         }
         midiSelect.onchange = function () {
-            midiIn = WebMidi.inputs[this.value];
-            inputChanged();
+            let index = parseInt(this.value, 10);
+            if (WebMidi.inputs[index]) {
+                midiIn = WebMidi.inputs[index];
+                inputChanged();
+            }
         };
     }
 });
