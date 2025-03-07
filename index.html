@@ -24,7 +24,7 @@
                 <div style="display: flex; justify-content: space-around;">
                     <div>
                         <h5>選擇 MIDI 裝置</h5>
-                        <input id="slider" type="range" min="0" max="0" value="0">
+                        <select id="midi-select" onchange="inputChanged()"></select>
                         <div id="device">Select Input: </div>
                     </div>
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: start;">
