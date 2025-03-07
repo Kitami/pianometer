@@ -74,6 +74,7 @@ function inputChanged() {
     controllerChange(67, 0);
 
     midiIn.removeListener();
+    let midiSelect = document.querySelector("#midi-select");
     midiIn = WebMidi.inputs[midiSelect.value()];  // 改為使用下拉框選擇的值
     midiIn.addListener('noteon', "all", function (e) {
         console.log("Received 'noteon' message (" + e.note.number + ", " + e.velocity + ").");
